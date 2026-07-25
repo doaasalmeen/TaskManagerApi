@@ -1,4 +1,4 @@
-const tasks = [];
+const tasks = require('../data/tasks');
 function createTask (req, res) {
     const task = {
         id : tasks.length + 1,
