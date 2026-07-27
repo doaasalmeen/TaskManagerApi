@@ -1,4 +1,5 @@
 import taskService from "../services/task.service.js";
+import asyncHandler from "../utils/asyncHandler.js";
 
 async function getTasks (req, res) {
     const tasks = await taskService.getTasks();
@@ -15,7 +16,7 @@ async function getTaskById (req, res){
     return res.status(200).json(task);
 }
 async function createTask (req, res) {
-    const task = await taskService.createTask(req.body.title)
+    const task = await taskService.createTask(req.body.title);
     res.status(201).json(task);
 }
 async function replaceTask(req, res){
@@ -50,10 +51,10 @@ async function deleteTask(req, res){
 }
 
 export default {
-    getTasks,
-    getTaskById,
-    createTask,
-    replaceTask,
-    updateTask,
-    deleteTask,
+    getTasks: asyncHandler(getTasks),
+    getTaskById: asyncHandler(getTaskById),
+    createTask: asyncHandler(createTask),
+    replaceTask: asyncHandler(replaceTask),
+    updateTask: asyncHandler(updateTask),
+    deleteTask: asyncHandler(deleteTask),
 };
