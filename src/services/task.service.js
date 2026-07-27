@@ -24,13 +24,21 @@ async function replaceTask(id, data){
         .returning();
    return task;
 }
-function updateTask(id, data){
-    const task = tasks.find(task => task.id === id);
-    if(!task){
-        return null;
+async function updateTask(id, data){
+    const values = {};
+    if (updates.title !== undefined) {
+        values.title = updates.title;
     }
-    Object.assign(task, data);
-    return task;
+    if (updates.completed !== undefined) {
+        values.completed = updates.completed;
+    }
+       const [task] = await db
+        .update(tasks)
+        .set(values)
+        .where(eq(tasks.id,id))
+        .returning();
+   return task;
+    
 }
 async function deleteTask(id){
     const [task] = await db.delete(tasks).where(eq(tasks.id,id)).returning();

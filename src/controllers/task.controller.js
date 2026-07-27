@@ -29,9 +29,9 @@ async function replaceTask(req, res){
     }
     return res.status(200).json(task);
 }
-function updateTask(req, res){
+async function updateTask(req, res){
     const id = Number(req.params.id);
-    const task = taskService.updateTask(id, req.body);
+    const task = await taskService.updateTask(id, req.body);
     if(!task){
         return res.status(404).json({
             message : "Task not found"
