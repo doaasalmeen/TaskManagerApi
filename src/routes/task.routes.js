@@ -1,9 +1,7 @@
-const express = require("express");
-
+import express from "express";
+import taskController from "../controllers/task.controller.js";
+import validateTask from "../middleware/validateTask.js";
 const router = express.Router();
-
-const taskController = require("../controllers/task.controller");
-const validateTask = require("../middleware/validateTask");
 
 router.get("/tasks", taskController.getTasks);
 router.get("/tasks/:id", taskController.getTaskById);
@@ -12,4 +10,4 @@ router.put("/tasks/:id", validateTask, taskController.replaceTask);
 router.patch("/tasks/:id", validateTask, taskController.updateTask);
 router.delete("/tasks/:id", taskController.deleteTask);
 
-module.exports = router;
+export default router;

@@ -1,12 +1,12 @@
-const taskService = require('../services/task.service')
+import taskService from "../services/task.service.js";
 
-function getTasks (req, res) {
-    const tasks = taskService.getTasks();
+async function getTasks (req, res) {
+    const tasks = await taskService.getTasks();
     return res.status(200).json(tasks);
 }
-function getTaskById (req, res){
+async function getTaskById (req, res){
     const id = Number(req.params.id);
-    const task = taskService.getTaskById(id);
+    const task = await taskService.getTaskById(id);
     if(!task){
         return res.status(404).json({
             message: "Task not found"
@@ -14,13 +14,13 @@ function getTaskById (req, res){
     }
     return res.status(200).json(task);
 }
-function createTask (req, res) {
-    const task = taskService.createTask(req.body.title)
+async function createTask (req, res) {
+    const task = await taskService.createTask(req.body.title)
     res.status(201).json(task);
 }
-function replaceTask(req, res){
+async function replaceTask(req, res){
     const id = Number(req.params.id);
-    const task = taskService.replaceTask(id, req.body);
+    const task = await taskService.replaceTask(id, req.body);
     if(!task){
         return res.status(404).json({
             message : "Task not found"
@@ -38,18 +38,18 @@ function updateTask(req, res){
     }
     return res.status(200).json(task);
 }
-function deleteTask(req, res){
+async function deleteTask(req, res){
     const id = Number(req.params.id);
-    const deleted = taskService.deleteTask(id);
-    if(!deleted){
+    const deletedTask = await taskService.deleteTask(id);
+    if(!deletedTask){
         return res.status(404).json({
             message : "Task not found"
         });
     }
-    return res.sendStatus(204);
+    return res.status(200).json(deletedTask);
 }
 
-module.exports = {
+export default {
     getTasks,
     getTaskById,
     createTask,

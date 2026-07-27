@@ -4,4 +4,4 @@ function errorHandler (err, res, req, next){
         message: "Internal server error"
     });
 }
-module.exports = errorHandler;
+export default errorHandler;

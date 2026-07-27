@@ -1,31 +1,28 @@
-const tasks = require('../data/tasks');
-function getTasks(){
-    return tasks;
+import { eq } from 'drizzle-orm';
+import {db} from '../db/index.js';
+import { tasks } from '../db/schema.js';
+async function getTasks(){
+    return await db.select().from(tasks);
 }
-function getTaskById(id){
-    return tasks.find(task => task.id === id);
-}
-function createTask(title){
-    const task = {
-        id : tasks.length + 1,
-        title,
-        completed:false
-    };
-    tasks.push(task);
+async function getTaskById(id){
+    const [task] = await db.select().from(tasks).where(eq(tasks.id,id));
     return task;
 }
-function replaceTask(id, data){
-    const index = tasks.findIndex(task => task.id === id);
-    if(index === -1){
-        return null;
-    }
-    const updatedTask = {
-        id,
-        title : data.title,
-        completed : data.completed
-    }
-    tasks[index] = updatedTask;
-    return updatedTask;
+async function createTask(title){
+    const [task] = await db.insert(tasks).values({title}).returning();
+    return task;
+}
+async function replaceTask(id, data){
+   const [task] = await db
+        .update(tasks)
+        .set
+            ({
+                title : data.title, 
+                completed : data.completed
+            })
+        .where(eq(tasks.id,id))
+        .returning();
+   return task;
 }
 function updateTask(id, data){
     const task = tasks.find(task => task.id === id);
@@ -35,16 +32,12 @@ function updateTask(id, data){
     Object.assign(task, data);
     return task;
 }
-function deleteTask(id){
-    const index = tasks.findIndex(task => task.id === id);
-    if(index === -1){
-        return false;
-    }
-    tasks.splice(index, 1);
-    return true;
+async function deleteTask(id){
+    const [task] = await db.delete(tasks).where(eq(tasks.id,id)).returning();
+    return task;
 }
 
-module.exports = {
+export default {
     getTasks,
     getTaskById,
     createTask,
